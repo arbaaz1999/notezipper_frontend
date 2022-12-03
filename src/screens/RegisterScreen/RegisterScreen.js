@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { ErrorMessage, Loader, MainScreen } from '../../components/index';
-import { registerUser } from '../../features/auth/authThunk';
+import { useRegisterUserMutation } from '../../services/authAPI';
+
 
 function RegisterScreen() {
+    const [registerUser] = useRegisterUserMutation()
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -15,7 +16,7 @@ function RegisterScreen() {
     const [picMessage, setPicMessage] = useState(null)
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
-    const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
     const submitHandler = async (e) => {
@@ -27,7 +28,7 @@ function RegisterScreen() {
             setMessage(null)
             try {
                 setLoading(true)
-                dispatch(registerUser({ name, email, password, pic }))
+                await registerUser({ name, email, password, pic })
                 setLoading(false)
                 setError(false)
                 navigate("/login")

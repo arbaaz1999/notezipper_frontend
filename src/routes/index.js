@@ -1,12 +1,11 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { MyNotes, CreateNote, UserProfile, LandingPage, LoginScreen, RegisterScreen } from '../screens/index';
 import { Loader } from '../components/index';
 
 
 const AppRoutes = () => {
-    const { token } = useSelector(state => state.authReducer)
+    const token = localStorage.getItem('token')
     if (!Boolean(token)) {
         return (
             <>

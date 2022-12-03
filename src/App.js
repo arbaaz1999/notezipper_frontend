@@ -1,17 +1,10 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Footer, Header } from "./components";
-import { checkAuth } from "./features/auth/authThunk";
 import AppRoutes from "./routes";
+// import { useCheckUserQuery } from "./services/authAPI";
 
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(checkAuth())
-  }, [dispatch])
-
   return (
     <div>
       <Header />
