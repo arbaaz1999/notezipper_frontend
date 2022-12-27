@@ -1,13 +1,28 @@
 import React from "react";
 import { Accordion, Badge, Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Loader, MainScreen } from "../../components/index";
-import { useGetNotesQuery } from "../../services/notesAPI";
+import {
+  useGetNotesQuery,
+  useDeleteNoteMutation,
+} from "../../services/notesAPI";
 
 const MyNotes = () => {
+  const navigate = useNavigate();
   const { data: notes, error, isLoading, isError } = useGetNotesQuery();
+  const [
+    deleteNote,
+    { error: deleteError, isError: deleteIsError, isLoading: isDeleting },
+  ] = useDeleteNoteMutation();
+  console.log(useDeleteNoteMutation());
+  console.log(notes?.data);
   const name = localStorage.getItem("name");
   if (isLoading) return <Loader />;
+
+  const deleteHandler = async (id) => {
+    console.log("delete button clicked");
+    await deleteNote(id);
+  };
 
   return (
     <MainScreen title={`Welcome back ${name}`}>
@@ -19,10 +34,11 @@ const MyNotes = () => {
         </Button>
       </Link>
       {isError && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {!notes ? (
+      {isDeleting && <Loader />}
+      {!notes?.data ? (
         <div>No notes created yet!</div>
       ) : (
-        notes?.map((note) => (
+        notes?.data?.map((note) => (
           <Accordion key={note._id}>
             <Card style={{ margin: 10 }}>
               <Accordion.Item>
@@ -43,10 +59,27 @@ const MyNotes = () => {
                     </Accordion.Header>
                   </span>
                   <div>
-                    <Button variant="primary">Edit</Button>
-                    <Button variant="danger" className="mx-2">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        navigate(`/edit-note/${note._id}`);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="mx-2"
+                      onClick={() => deleteHandler(note._id)}
+                    >
                       Delete
                     </Button>
+                    {console.log(
+                      "isDeleteError ",
+                      deleteIsError,
+                      "and error is ",
+                      deleteError
+                    )}
                   </div>
                 </Card.Header>
                 <Accordion.Body>

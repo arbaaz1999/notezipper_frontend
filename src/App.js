@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Footer, Header } from "./components";
 import AppRoutes from "./routes";
-// import { useCheckUserQuery } from "./services/authAPI";
-
 
 function App() {
   return (
@@ -11,7 +9,7 @@ function App() {
       <AppRoutes />
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

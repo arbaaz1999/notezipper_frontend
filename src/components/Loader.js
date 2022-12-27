@@ -1,20 +1,25 @@
-import React from 'react'
-import { Spinner } from 'react-bootstrap'
+import React from "react";
+import { Spinner } from "react-bootstrap";
 
 const Loader = ({ size = 100 }) => {
-    return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%"
-        }}>
-            <Spinner style={{
-                width: size,
-                height: size,
-            }} animation="border" />
-        </div>
-    )
-}
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Spinner
+        style={{
+          width: size,
+          height: size,
+        }}
+        animation="border"
+      />
+    </div>
+  );
+};
 
-export default Loader
+export default Loader;

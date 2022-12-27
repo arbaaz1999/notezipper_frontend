@@ -5,13 +5,17 @@ import { ErrorMessage, Loader, MainScreen } from "../../components/index";
 import { useLoginMutation } from "../../services/authAPI";
 
 function LoginScreen() {
-  const [login, { data, isLoading }] = useLoginMutation();
+  console.log("component start");
+  const navigate = useNavigate();
+  const [login, mutationResult] = useLoginMutation();
+  const { data, isLoading, error } = mutationResult;
+  console.log("login data is", data);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(false);
-  const navigate = useNavigate();
+
+  // const [error, setError] = useState(false);
 
   if (isLoading) return <Loader />;
 
@@ -23,22 +27,21 @@ function LoginScreen() {
   };
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      await login({ ...credentials });
+    console.log("inside submithandler 1");
+    await login(credentials);
+    if (data) {
       let token = data?.data?.token;
       let name = data?.data?.name;
-      if (token) {
-        console.log(token);
-        localStorage.setItem("token", token);
-        localStorage.setItem("name", name);
-        navigate("/");
-      }
-    } catch (error) {
-      setError(error);
-      console.log(error);
-    }
+      console.log(token, name);
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", name);
+    } else return undefined;
+    navigate("/");
+    console.log("inside submit handler 2");
+    e.preventDefault();
   };
+
+  console.log("component end");
 
   return (
     <MainScreen title="LOGIN">

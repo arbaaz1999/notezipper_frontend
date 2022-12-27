@@ -44,8 +44,12 @@ const Header = () => {
               </Nav.Link>
             ) : (
               <NavDropdown title={name} id="navbarScrollingDropdown">
-                <NavDropdown.Item>
-                  <Link to="/profile">My Profile</Link>
+                <NavDropdown.Item
+                  onClick={() => {
+                    navigate("/profile");
+                  }}
+                >
+                  My Profile
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item
