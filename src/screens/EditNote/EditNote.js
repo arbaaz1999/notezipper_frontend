@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEditNoteMutation, useGetNoteQuery } from "../../services/notesAPI";
 import { Button, Card, Form } from "react-bootstrap";
@@ -6,15 +6,27 @@ import ReactMarkdown from "react-markdown";
 import { Loader, MainScreen } from "../../components/index";
 
 const EditNote = () => {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const id = useParams();
   console.log(id.id);
   const { data: notes, isLoading } = useGetNoteQuery(id.id);
   console.log(notes);
   const [editNote, { isLoading: isUpdating }] = useEditNoteMutation();
-  const [title, setTitle] = useState(notes?.data?.title);
-  const [content, setContent] = useState(notes?.data?.content);
-  const [category, setCategory] = useState(notes?.data?.category);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  useEffect(() => {
+    setTitle(notes?.data?.title);
+    setContent(notes?.data?.content);
+    setCategory(notes?.data?.category);
+  }, [navigate, notes]);
+
+  useEffect(() => {
+    if (!token || token === undefined) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   if (isLoading) return <Loader />;
 
@@ -27,8 +39,7 @@ const EditNote = () => {
   const submitHandler = async () => {
     try {
       await editNote({ id, title, content, category });
-      //resetHandler();
-      navigate("/");
+      navigate("/my-notes");
     } catch (error) {
       console.log("Error occured while updating note", error);
     }

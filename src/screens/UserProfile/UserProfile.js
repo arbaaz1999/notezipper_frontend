@@ -5,6 +5,7 @@ import { ErrorMessage, Loader, MainScreen } from "../../components/index";
 import { useUpdateUserMutation, useGetUserQuery } from "../../services/authAPI";
 
 function UserProfile() {
+  const token = localStorage.getItem("token");
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const { data: userInfo } = useGetUserQuery();
   const [name, setName] = useState("");
@@ -26,6 +27,12 @@ function UserProfile() {
     setEmail(userInfo?.data[0]?.email);
     setPic(userInfo?.data[0]?.pic);
   }, [navigate, userInfo]);
+
+  useEffect(() => {
+    if (!token || token === undefined) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   const submitHandler = async (e) => {
     e.preventDefault();

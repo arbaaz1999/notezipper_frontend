@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { ErrorMessage, Loader, MainScreen } from "../../components/index";
 import { useCreateNoteMutation } from "../../services/notesAPI";
 
 const CreateNote = () => {
+  const token = localStorage.getItem("token");
   const [createNote] = useCreateNoteMutation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -13,6 +14,12 @@ const CreateNote = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token || token === undefined) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   const resetHandler = () => {
     setTitle("");
@@ -24,9 +31,8 @@ const CreateNote = () => {
     try {
       setLoading(true);
       await createNote({ title, content, category });
-      resetHandler();
       setLoading(false);
-      navigate("/");
+      navigate("/my-notes");
     } catch (error) {
       console.log(error);
       setError(error);

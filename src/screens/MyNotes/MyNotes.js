@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Accordion, Badge, Button, Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Loader, MainScreen } from "../../components/index";
@@ -8,15 +8,21 @@ import {
 } from "../../services/notesAPI";
 
 const MyNotes = () => {
+  const token = localStorage.getItem("token");
+  const name = localStorage.getItem("name");
   const navigate = useNavigate();
   const { data: notes, error, isLoading, isError } = useGetNotesQuery();
   const [
     deleteNote,
     { error: deleteError, isError: deleteIsError, isLoading: isDeleting },
   ] = useDeleteNoteMutation();
-  console.log(useDeleteNoteMutation());
-  console.log(notes?.data);
-  const name = localStorage.getItem("name");
+
+  useEffect(() => {
+    if (!token || token === undefined) {
+      navigate("/");
+    }
+  }, [navigate, token]);
+
   if (isLoading) return <Loader />;
 
   const deleteHandler = async (id) => {
@@ -26,13 +32,11 @@ const MyNotes = () => {
 
   return (
     <MainScreen title={`Welcome back ${name}`}>
-      <Link to="/create-notes">
-        <Button style={{ marginLeft: 10, marginBottom: 6 }} size="lg">
-          <Link to="/create-note" style={{ textDecoration: "none" }}>
-            Create New Note
-          </Link>
-        </Button>
-      </Link>
+      <Button style={{ marginLeft: 10, marginBottom: 6 }} size="lg">
+        <Link to="/create-note" style={{ textDecoration: "none" }}>
+          Create New Note
+        </Link>
+      </Button>
       {isError && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       {isDeleting && <Loader />}
       {!notes?.data ? (

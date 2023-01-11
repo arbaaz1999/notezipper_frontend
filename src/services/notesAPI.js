@@ -36,12 +36,14 @@ export const notesAPI = createApi({
         method: "PUT",
         body: body,
       }),
+      invalidatesTags: ["Notes"],
     }),
     deleteNote: builder.mutation({
       query: (id) => ({
         url: `/notes/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Notes"],
     }),
   }),
 });

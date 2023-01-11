@@ -18,7 +18,7 @@ const Header = () => {
     <Navbar bg="primary" expand="lg" variant="dark">
       <Container>
         <Navbar.Brand>
-          <Link to="/">Note Zipper</Link>
+          <Link to="/my-notes">Note Zipper</Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
@@ -35,7 +35,7 @@ const Header = () => {
           <Nav style={{ maxHeight: "100px" }} navbarScroll>
             {token ? (
               <Nav.Link>
-                <Link to="/"> My Notes </Link>
+                <Link to="/my-notes"> My Notes </Link>
               </Nav.Link>
             ) : null}
             {!token ? (
@@ -55,7 +55,7 @@ const Header = () => {
                 <NavDropdown.Item
                   onClick={() => {
                     localStorage.clear();
-                    navigate("/");
+                    navigate("/login");
                   }}
                 >
                   Logout

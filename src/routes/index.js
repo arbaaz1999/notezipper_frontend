@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import {
   MyNotes,
@@ -9,35 +9,18 @@ import {
   RegisterScreen,
   EditNote,
 } from "../screens/index";
-import { Loader } from "../components/index";
 
 const AppRoutes = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return (
-      <>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route exact path="/" element={<LandingPage />} />
-            <Route exact path="/login" element={<LoginScreen />} />
-            <Route exact path="/register" element={<RegisterScreen />} />
-          </Routes>
-        </Suspense>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route exact path="/" element={<MyNotes />} />
-            <Route exact path="/create-note" element={<CreateNote />} />
-            <Route exact path="/edit-note/:id" element={<EditNote />} />
-            <Route exact path="/profile/" element={<UserProfile />} />
-          </Routes>
-        </Suspense>
-      </>
-    );
-  }
+  return (
+    <Routes>
+      <Route exact path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/my-notes" element={<MyNotes />} />
+      <Route path="/create-note" element={<CreateNote />} />
+      <Route path="/edit-note/:id" element={<EditNote />} />
+      <Route path="/profile" element={<UserProfile />} />
+    </Routes>
+  );
 };
 export default AppRoutes;

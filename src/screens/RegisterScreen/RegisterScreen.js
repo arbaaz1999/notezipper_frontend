@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Loader, MainScreen } from "../../components/index";
 import { useRegisterUserMutation } from "../../services/authAPI";
 
 function RegisterScreen() {
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
   const [registerUser] = useRegisterUserMutation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +20,11 @@ function RegisterScreen() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (token) {
+      navigate("/my-notes");
+    }
+  }, [navigate, token]);
 
   const submitHandler = async (e) => {
     e.preventDefault();

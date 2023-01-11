@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Loader, MainScreen } from "../../components/index";
@@ -6,14 +6,20 @@ import { useLoginMutation } from "../../services/authAPI";
 
 function LoginScreen() {
   console.log("component start");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [login, mutationResult] = useLoginMutation();
-  const { data, isLoading, error } = mutationResult;
-  console.log("login data is", data);
+  const { isLoading, error } = mutationResult;
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (token) {
+      navigate("/my-notes");
+    }
+  }, [navigate, token]);
 
   // const [error, setError] = useState(false);
 
@@ -27,18 +33,19 @@ function LoginScreen() {
   };
 
   const submitHandler = async (e) => {
-    console.log("inside submithandler 1");
-    await login(credentials);
-    if (data) {
-      let token = data?.data?.token;
-      let name = data?.data?.name;
-      console.log(token, name);
-      localStorage.setItem("token", token);
-      localStorage.setItem("name", name);
-    } else return undefined;
-    navigate("/");
-    console.log("inside submit handler 2");
     e.preventDefault();
+    console.log("inside submithandler 1");
+    await login(credentials)
+      .then((res) => {
+        let token = res.data.data.token;
+        let name = res.data.data.name;
+        console.log(token, name);
+        localStorage.setItem("token", token);
+        localStorage.setItem("name", name);
+        navigate("/my-notes");
+      })
+      .catch((err) => err);
+    console.log("inside submit handler 2");
   };
 
   console.log("component end");
